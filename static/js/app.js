@@ -1,3 +1,5 @@
+
+// Initial function to display default data
 function init(index = "940") {
 
 // Use the d3 library to read in samples.json
@@ -6,11 +8,9 @@ function init(index = "940") {
         console.log(data.names.indexOf(index));
         index = data.names.indexOf(index);
 
-        // var results = data.filter("samples.json")
 
         var names = data.names;
         var dm = data.metadata;
-        // var sample_ids = data.samples[index].id;
         var OTUs = data.samples[index].otu_ids;
         var otuValues = data.samples[index].sample_values;
 
@@ -37,19 +37,20 @@ function init(index = "940") {
               prow = pbody.append("tr");
               prow.append("td").text(`id: ${ids}`);
               prow = pbody.append("tr");
-              prow.append("td").text(ethnicity);
+              prow.append("td").text(`ethnicity: ${ethnicity}`);
               prow = pbody.append("tr");
-              prow.append("td").text(gender);
+              prow.append("td").text(`gender: ${gender}`);
               prow = pbody.append("tr");
-              prow.append("td").text(age);
+              prow.append("td").text(`age: ${age}`);
               prow = pbody.append("tr");
-              prow.append("td").text(location);
+              prow.append("td").text(`location: ${location}`);
               prow = pbody.append("tr");
-              prow.append("td").text(bbtype);
+              prow.append("td").text(`bbtype: ${bbtype}`);
               prow = pbody.append("tr");
-              prow.append("td").text(wfreq);
+              prow.append("td").text(`wfreq: ${wfreq}`);
         };
 
+        // Run the function to update the Demographic Info object
         buildTable(ids, ethnicity, gender, age, location, bbtype, wfreq);
 
 
@@ -57,23 +58,17 @@ function init(index = "940") {
         slicedOTUs = OTUs.slice(0, 10);
         slicedSampleValues = otuValues.slice(0, 10);
         reversedOTUs = slicedOTUs.reverse();
-
         reversedSamples = slicedSampleValues.reverse();
-
         var yticks = OTUs.slice(0, 10).map(otuID => `OTU ${otuID}`).reverse();
 
         // Create the trace
         var trace1 = {
             x: reversedSamples,
-            // .map(object => object.OTUs),
             y: yticks,
-            // y: reversedSamples.map(object => object.otuValues),
-            // text: reversedData.map(object => object.OTUs),
             type: "bar",
             orientation: "h"
         };
 
-        // data
         var data = [trace1];
 
         // Apply the group bar mode to the layout
@@ -111,24 +106,22 @@ function init(index = "940") {
           
           Plotly.newPlot("bubble", data, layout);
 
-
     });
 
 };
 
+// Run the function
 init(); 
 
-
+// Create a function for user selection of new sample/subject ID
 function getData() {
    
     var dropdownMenu = d3.select("#selDataset");
     
     // Assign the value of the dropdown menu option to a variable
-
     d3.json("../../samples.json").then((importedData) => {
         console.log(importedData);
         var dropdownData = importedData.names;
-        // var results = data.filter("samples.json")
 
         dropdownData.forEach((name) => {
             dropdownMenu.append("option").text(name).property("value", name)
@@ -138,8 +131,10 @@ function getData() {
 
 };
 
+// Run the function
 getData();
 
+// Create a function for when the option has changed
 function optionChanged(selected) {
     init(selected);
     console.log(selected);

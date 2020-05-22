@@ -8,46 +8,49 @@ function init(index = "940") {
 
         // var results = data.filter("samples.json")
 
-        // var names = data.names;
-        // var dm = data.metadata;
+        var names = data.names;
+        var dm = data.metadata;
         // var sample_ids = data.samples[index].id;
         var OTUs = data.samples[index].otu_ids;
         var otuValues = data.samples[index].sample_values;
 
-
-        // ****************************
-        // OFFICE HOURS QUESTION 1
-        // ****************************
-
+        // filter the metadata using a function matching the sample_ids with the metadata id
+        var metadataResults = dm.filter(subjectID => subjectID.id == data.names[index]);
+        console.log(metadataResults[0])
 
         // Populate the Demographic Info
         // Initiate variables for the demographic info
-        // var ids = dm[0].id;
-        // var ethnicity = dm.ethnicity;
-        // var gender = dm.gender;
-        // var age = dm.age;
-        // var location = dm.location;
-        // var bbtype = dm.bbtype;
-        // var wfreq = dm.wfreq;
+        var ids = metadataResults[0].id;
+        var ethnicity = metadataResults[0].ethnicity;
+        var gender = metadataResults[0].gender;
+        var age = metadataResults[0].age;
+        var location = metadataResults[0].location;
+        var bbtype = metadataResults[0].bbtype;
+        var wfreq = metadataResults[0].wfreq;
 
-        // // Append the information into the Demographic Info object
-        // function buildTable(ids, ethnicity, gender, age, location, bbtype, wfreq) {
-        //     var table = d3.select(".panel");
-        //     var pbody = table.select(".panel-body");
-        //     var prow;
-        //     for (var i = 0; i < 12; i++) {
-        //       prow = pbody.append("tr");
-        //       prow.append("td").text(`id: ${ids}[i]`);
-        //       prow.append("td").text(ethnicity[i]);
-        //       prow.append("td").text(gender[i]);
-        //       prow.append("td").text(age[i]);
-        //       prow.append("td").text(location[i]);
-        //       prow.append("td").text(bbtype[i]);
-        //       prow.append("td").text(wfreq[i]);
-        //     }
-        // });
+        // Append the information into the Demographic Info object
+        function buildTable(ids, ethnicity, gender, age, location, bbtype, wfreq) {
+            var table = d3.select(".panel");
+            var pbody = table.select("#sample-metadata");
+            pbody.html("")
+            var prow;
+              prow = pbody.append("tr");
+              prow.append("td").text(`id: ${ids}`);
+              prow = pbody.append("tr");
+              prow.append("td").text(ethnicity);
+              prow = pbody.append("tr");
+              prow.append("td").text(gender);
+              prow = pbody.append("tr");
+              prow.append("td").text(age);
+              prow = pbody.append("tr");
+              prow.append("td").text(location);
+              prow = pbody.append("tr");
+              prow.append("td").text(bbtype);
+              prow = pbody.append("tr");
+              prow.append("td").text(wfreq);
+        };
 
-        //   buildTable();
+        buildTable(ids, ethnicity, gender, age, location, bbtype, wfreq);
 
 
         // Create a horizontal bar chart with the top ten OTU values
@@ -86,28 +89,14 @@ function init(index = "940") {
         // Render the plot to the div tag with id "plot"
         Plotly.newPlot("bar", data);
 
-        // ****************************
-        // OFFICE HOURS QUESTION 2
-        // ****************************
-
-
         // Populate the sample info into a bubble chart
         var trace2 = {
             x: OTUs,
             y: otuValues,
             mode: 'markers',
             marker: {
-            //   size: [40, 60, 80, 100],
-              color: [    '#1f77b4',  // muted blue
-              '#ff7f0e',  // safety orange
-              '#2ca02c',  // cooked asparagus green
-              '#d62728',  // brick red
-              '#9467bd',  // muted purple
-              '#8c564b',  // chestnut brown
-              '#e377c2',  // raspberry yogurt pink
-              '#7f7f7f',  // middle gray
-              '#bcbd22',  // curry yellow-green
-              '#17becf']
+              size: otuValues,
+              color: OTUs
             }
           };
           
@@ -117,7 +106,7 @@ function init(index = "940") {
             title: 'OTU Values',
             showlegend: false,
             height: 600,
-            width: 600
+            width: 1000
           };
           
           Plotly.newPlot("bubble", data, layout);
@@ -135,7 +124,6 @@ function getData() {
     var dropdownMenu = d3.select("#selDataset");
     
     // Assign the value of the dropdown menu option to a variable
-
 
     d3.json("../../samples.json").then((importedData) => {
         console.log(importedData);
